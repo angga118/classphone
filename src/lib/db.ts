@@ -7,7 +7,8 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient() {
   const adapter = new PrismaNeon({
-    connectionString: process.env.DATABASE_URL!,
+    connectionString:
+      process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? "",
   });
   return new PrismaClient({ adapter });
 }

@@ -3,7 +3,8 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
 
 const adapter = new PrismaNeon({
-  connectionString: process.env.DATABASE_URL!,
+  connectionString:
+    process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? "",
 });
 const prisma = new PrismaClient({ adapter });
 
