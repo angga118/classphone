@@ -1,0 +1,193 @@
+// Prisma schema for GadgetHub marketplace
+// Prisma 7 convention: `prisma-client` generator with explicit output path
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ListingCondition {
+  MINT
+  NORMAL
+  DAMAGED
+}
+
+enum ListingStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  DEAL
+  COMPLETED
+}
+
+enum ProductCondition {
+  NEW
+  LIKE_NEW
+  USED
+}
+
+enum StockStatus {
+  AVAILABLE
+  BOOKED
+  SOLD
+  DRAFT
+}
+
+enum TransactionType {
+  SELL
+  BUY
+}
+
+enum TransactionStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id                  String        @id @default(cuid())
+  name                String
+  email               String        @unique
+  passwordHash        String
+  phone               String?
+  address             String?
+  notificationEnabled Boolean       @default(true)
+  role                Role          @default(USER)
+  isBlocked           Boolean       @default(false)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  listings            Listing[]
+  transactions        Transaction[]
+  notifications       Notification[]
+  accounts            Account[]
+  sessions            Session[]
+}
+
+model Listing {
+  id           String          @id @default(cuid())
+  userId       String
+  brand        String
+  model        String
+  storage      String
+  condition    ListingCondition
+  completeness String // JSON array of strings (SQLite has no scalar lists)
+  photos       String // JSON array of photo URLs (SQLite has no scalar lists)
+  description  String?
+  askingPrice  Float?
+  dealPrice    Float?
+  status       ListingStatus   @default(PENDING_REVIEW)
+  adminNote    String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  user         User            @relation(fields: [userId], references: [id])
+  product      Product?
+  transactions Transaction[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Product {
+  id              String          @id @default(cuid())
+  name            String
+  brand           String
+  model           String
+  storage         String
+  condition       ProductCondition
+  price           Float
+  stockStatus     StockStatus     @default(AVAILABLE)
+  description     String?
+  photos          String // JSON array of photo URLs (SQLite has no scalar lists)
+  sourceListingId String?         @unique
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  sourceListing   Listing?        @relation(fields: [sourceListingId], references: [id])
+  transactions    Transaction[]
+
+  @@index([stockStatus])
+}
+
+model Transaction {
+  id                 String             @id @default(cuid())
+  type               TransactionType
+  listingId          String?
+  productId          String?
+  userId             String
+  finalPrice         Float
+  status             TransactionStatus  @default(IN_PROGRESS)
+  whatsappThreadNote String?
+  createdAt          DateTime           @default(now())
+  listing            Listing?           @relation(fields: [listingId], references: [id])
+  product            Product?           @relation(fields: [productId], references: [id])
+  user               User               @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([listingId])
+  @@index([productId])
+}
+
+model Settings {
+  id                    String   @id @default("default")
+  adminWhatsappNumber   String   @default("6281234567890")
+  messageTemplateJual   String   @default("Halo Admin, saya ingin menjual {nama_hp} (ID Listing: {kode}) dengan harga estimasi Rp {harga}. Mohon info langkah selanjutnya.")
+  messageTemplateBeli   String   @default("Halo Admin, saya ingin beli {nama_hp} (Kode: {kode}) seharga Rp {harga}. Apakah masih tersedia?")
+  updatedAt             DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // NEW_LISTING, LISTING_APPROVED, LISTING_REJECTED, LISTING_DEAL, LISTING_COMPLETED, PRODUCT_CONVERTED
+  title     String
+  message   String?
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  GadgetHub design tokens (Tailwind v4 @theme)                       */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  /* Primary — dark blue / blue-600 */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
+
+  /* WhatsApp accent */
+  --color-wa: #25d366;
+  --color-wa-dark: #1da851;
+  --color-wa-soft: #e7f9ef;
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-success-soft: #e9f7ef;
+  --color-warning: #f59e0b;
+  --color-warning-soft: #fef3e2;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fdecec;
+  --color-info: #2563eb;
+  --color-info-soft: #eaf1fe;
+
+  /* Neutrals */
+  --color-surface: #f8fafc;
+  --color-ink: #0f172a;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+}
+
+@theme inline {
+  --font-sans: var(--font-plus-jakarta);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base styles                                                        */
+/* ------------------------------------------------------------------ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white font-sans text-ink antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: var(--color-primary-100);
+  color: var(--color-primary-900);
+}
+
+/* Thin, unobtrusive scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reusable surface utilities                                         */
+/* ------------------------------------------------------------------ */
+
+@utility card {
+  @apply rounded-2xl border border-line bg-white shadow-sm;
+}
+
+@utility card-hover {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-md;
+}
+
+/* Subtle dotted grid texture for hero bands */
+@utility bg-dots {
+  background-image: radial-gradient(circle, rgba(30, 58, 138, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Soft radial glow for hero */
+@utility bg-hero-glow {
+  background-image:
+    radial-gradient(58rem 28rem at 12% -8%, rgba(37, 99, 235, 0.14), transparent 62%),
+    radial-gradient(46rem 26rem at 92% 0%, rgba(37, 99, 235, 0.1), transparent 60%);
+}
+
+/* Fade-in on mount (used by client components) */
+@keyframes gh-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fade-up {
+  animation: gh-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
