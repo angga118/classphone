@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GadgetHub (ClassPhone)
 
-## Getting Started
+Aplikasi web marketplace jual-beli HP bekas, dibangun dengan **Next.js (App Router)**, **Prisma** (SQLite), dan **NextAuth**. Pengguna bisa mengajukan HP untuk dijual, admin melakukan review & penilaian harga, lalu listing yang disetujui dikonversi menjadi produk yang dijual di katalog publik.
 
-First, run the development server:
+## ✨ Fitur Utama
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Untuk Pengguna (User)
+- Registrasi & login (NextAuth, credentials)
+- Jual HP: ajukan listing (merek, model, storage, kondisi, kelengkapan, foto, deskripsi, harga yang diinginkan)
+- Dashboard untuk memantau status listing: `PENDING_REVIEW` → `APPROVED` / `REJECTED` → `DEAL` → `COMPLETED`
+- Chat WhatsApp otomatis (template pesan) ke admin untuk tindak lanjut jual/beli
+- Notifikasi in-app (listing disetujui, ditolak, deal, dll.)
+- Pengaturan profil, ubah password, dan preferensi notifikasi
+
+### Untuk Publik (tanpa login)
+- Melihat katalog produk (HP yang tersedia untuk dibeli)
+- Detail produk (kondisi, harga, foto, storage)
+
+### Untuk Admin
+- Dashboard statistik
+- Kelola "Listing Masuk": review, setujui/tolak, catat harga deal, beri catatan admin
+- Konversi listing yang sudah deal menjadi produk di katalog
+- Kelola produk (tambah manual, ubah status stok: `AVAILABLE`, `BOOKED`, `SOLD`, `DRAFT`)
+- Kelola pengguna (blokir/aktifkan akun)
+- Pengaturan sistem: nomor WhatsApp admin & template pesan jual/beli
+
+## 🛠️ Tech Stack
+
+| Layer | Teknologi |
+|---|---|
+| Framework | [Next.js 16](https://nextjs.org) (App Router) |
+| Bahasa | TypeScript |
+| UI | React 19, Tailwind CSS 4 |
+| Autentikasi | NextAuth v5 (beta) + Prisma Adapter |
+| Database | SQLite (via Prisma 7 + `better-sqlite3`) |
+| ORM | Prisma |
+| Validasi | Zod |
+| Ikon | lucide-react |
+| Hashing password | bcryptjs |
+| Linting | ESLint |
+
+## 📁 Struktur Proyek
+
+```
+src/
+├── app/
+│   ├── (public)/         # Beranda & katalog produk (dapat diakses publik)
+│   ├── (auth)/            # Halaman login & register
+│   ├── (user)/            # Dashboard user, jual HP, pengaturan
+│   ├── admin/             # Login & dashboard admin (listing masuk, produk, users, pengaturan)
+│   └── api/               # Route handlers (auth, listings, products, transactions, notifications, dll.)
+├── components/            # Komponen UI
+├── lib/                   # Auth config, koneksi DB, guards, notifikasi, WhatsApp helper, validator
+└── generated/prisma/      # Prisma Client hasil generate (auto-generated)
+prisma/
+├── schema.prisma          # Skema database
+├── migrations/            # Riwayat migrasi
+└── seed.ts                # Data awal (seed)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🗄️ Model Data (ringkas)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **User** — akun pengguna/admin (role `USER`/`ADMIN`)
+- **Listing** — pengajuan jual HP dari user, berstatus `PENDING_REVIEW` → `APPROVED`/`REJECTED` → `DEAL` → `COMPLETED`
+- **Product** — HP yang dijual di katalog (bisa berasal dari listing yang dikonversi, atau input admin)
+- **Transaction** — catatan transaksi jual/beli
+- **Notification** — notifikasi in-app untuk user
+- **Settings** — nomor WhatsApp admin & template pesan
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Menjalankan Secara Lokal
 
-## Learn More
+### 1. Clone repository
+```bash
+git clone https://github.com/angga118/classphone.git
+cd classphone
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Install dependencies
+```bash
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Konfigurasi environment
+Salin `.env.example` menjadi `.env`, lalu sesuaikan:
+```bash
+cp .env.example .env
+```
+```env
+DATABASE_URL="file:./dev.db"
+AUTH_SECRET="<generate string acak minimal 32 karakter>"
+AUTH_TRUST_HOST=true
+```
+Generate `AUTH_SECRET` dengan cepat via:
+```bash
+npx auth secret
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Setup database (migrasi + seed)
+```bash
+npx prisma migrate dev
+npx prisma db seed
+```
 
-## Deploy on Vercel
+### 5. Jalankan development server
+```bash
+npm run dev
+```
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔑 Akun Default (hasil seed)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@gadgethub.test` | `admin123` |
+| User | `user@gadgethub.test` | `user123` |
+
+> ⚠️ Ganti kredensial ini sebelum digunakan di lingkungan produksi.
+
+## 📜 Script yang Tersedia
+
+| Perintah | Keterangan |
+|---|---|
+| `npm run dev` | Menjalankan server development |
+| `npm run build` | Build aplikasi untuk production |
+| `npm run start` | Menjalankan aplikasi hasil build |
+| `npm run lint` | Menjalankan ESLint |
+
+## 📄 Lisensi
+
+Belum ditentukan. Tambahkan file `LICENSE` jika ingin menetapkan lisensi tertentu untuk proyek ini.
