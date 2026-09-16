@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum Role {
@@ -59,7 +59,7 @@ model User {
   email               String        @unique
   passwordHash        String
   phone               String?
-  address             String?
+  address             String?         @db.Text
   notificationEnabled Boolean       @default(true)
   role                Role          @default(USER)
   isBlocked           Boolean       @default(false)
@@ -79,13 +79,13 @@ model Listing {
   model        String
   storage      String
   condition    ListingCondition
-  completeness String // JSON array of strings (SQLite has no scalar lists)
-  photos       String // JSON array of photo URLs (SQLite has no scalar lists)
-  description  String?
+  completeness String @db.Text // JSON array of strings
+  photos       String @db.Text // JSON array of photo URLs
+  description  String? @db.Text
   askingPrice  Float?
   dealPrice    Float?
   status       ListingStatus   @default(PENDING_REVIEW)
-  adminNote    String?
+  adminNote    String? @db.Text
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   user         User            @relation(fields: [userId], references: [id])
@@ -105,8 +105,8 @@ model Product {
   condition       ProductCondition
   price           Float
   stockStatus     StockStatus     @default(AVAILABLE)
-  description     String?
-  photos          String // JSON array of photo URLs (SQLite has no scalar lists)
+  description     String? @db.Text
+  photos          String @db.Text // JSON array of photo URLs
   sourceListingId String?         @unique
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
@@ -124,7 +124,7 @@ model Transaction {
   userId             String
   finalPrice         Float
   status             TransactionStatus  @default(IN_PROGRESS)
-  whatsappThreadNote String?
+  whatsappThreadNote String? @db.Text
   createdAt          DateTime           @default(now())
   listing            Listing?           @relation(fields: [listingId], references: [id])
   product            Product?           @relation(fields: [productId], references: [id])
@@ -138,8 +138,8 @@ model Transaction {
 model Settings {
   id                    String   @id @default("default")
   adminWhatsappNumber   String   @default("6281234567890")
-  messageTemplateJual   String   @default("Halo Admin, saya ingin menjual {nama_hp} (ID Listing: {kode}) dengan harga estimasi Rp {harga}. Mohon info langkah selanjutnya.")
-  messageTemplateBeli   String   @default("Halo Admin, saya ingin beli {nama_hp} (Kode: {kode}) seharga Rp {harga}. Apakah masih tersedia?")
+  messageTemplateJual   String   @db.Text @default("Halo Admin, saya ingin menjual {nama_hp} (ID Listing: {kode}) dengan harga estimasi Rp {harga}. Mohon info langkah selanjutnya.")
+  messageTemplateBeli   String   @db.Text @default("Halo Admin, saya ingin beli {nama_hp} (Kode: {kode}) seharga Rp {harga}. Apakah masih tersedia?")
   updatedAt             DateTime @updatedAt
 }
 
@@ -148,8 +148,8 @@ model Notification {
   userId    String
   type      String   // NEW_LISTING, LISTING_APPROVED, LISTING_REJECTED, LISTING_DEAL, LISTING_COMPLETED, PRODUCT_CONVERTED
   title     String
-  message   String?
-  link      String?
+  message   String? @db.Text
+  link      String? @db.Text
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -164,12 +164,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -186,7 +186,7 @@ model Session {
 
 model VerificationToken {
   identifier String
-  token      String
+token      String   @db.Text
   expires    DateTime
 
   @@unique([identifier, token])
