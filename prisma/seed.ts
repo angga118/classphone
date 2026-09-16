@@ -1,8 +1,8 @@
 import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const adapter = new PrismaNeon({
+const adapter = new PrismaPg({
   connectionString:
     process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? "",
 });

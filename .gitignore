@@ -52,3 +52,6 @@ prisma/*.db-journal
 
 # generated prisma client
 /src/generated/
+
+.vercel
+.env*
