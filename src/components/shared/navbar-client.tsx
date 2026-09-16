@@ -105,9 +105,9 @@ export function NavbarClient({
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/85 shadow-sm backdrop-blur-md">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6 lg:px-8">
-        {/* Col 1 — Logo (left) */}
-        <div className="flex justify-start">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+        {/* Left — Logo */}
+        <div className="flex min-w-0 flex-1 justify-start">
           <Link
             href="/"
             className="flex shrink-0 items-center gap-2.5"
@@ -120,7 +120,7 @@ export function NavbarClient({
           </Link>
         </div>
 
-        {/* Col 2 — Centered nav links (lg+) */}
+        {/* Center — Nav links (lg+) */}
         <nav className="hidden items-center gap-1 lg:flex">
           <Button
             variant="ghost"
@@ -154,8 +154,8 @@ export function NavbarClient({
           ) : null}
         </nav>
 
-        {/* Col 3 — Actions (right) */}
-        <div className="flex items-center justify-end gap-2">
+        {/* Right — Actions */}
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
           {/* Desktop actions (lg+) */}
           <div className="hidden items-center gap-2 lg:flex">
             {user ? (
@@ -243,10 +243,10 @@ export function NavbarClient({
             )}
           </div>
 
-          {/* Mobile toggle (<lg) */}
+          {/* Mobile toggle (<lg) — pushed to the far right */}
           <button
             type="button"
-            className="flex size-11 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:bg-surface lg:hidden"
+            className="ml-auto flex size-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:bg-surface lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Tutup menu" : "Buka menu"}
             aria-expanded={open}
