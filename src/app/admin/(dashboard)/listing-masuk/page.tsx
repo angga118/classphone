@@ -93,7 +93,55 @@ export default async function ListingMasukPage({
         </div>
       ) : (
         <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Mobile card list */}
+          <ul className="divide-y divide-line sm:hidden">
+            {listings.map((listing) => (
+              <li key={listing.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-ink">
+                      {listing.brand} {listing.model}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted">
+                      {shortId(listing.id)} · {listing.storage}
+                    </p>
+                  </div>
+                  <StatusBadge status={listing.status} />
+                </div>
+
+                <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                  <div className="min-w-0">
+                    <dt className="text-muted">User</dt>
+                    <dd className="truncate font-semibold text-ink">
+                      {listing.user.name}
+                    </dd>
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-muted">Harga Minta</dt>
+                    <dd className="truncate font-semibold tabular-nums text-ink">
+                      {listing.askingPrice ? formatIDR(listing.askingPrice) : "—"}
+                    </dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="text-muted">Tanggal</dt>
+                    <dd className="font-semibold text-ink">
+                      {formatDate(listing.createdAt)}
+                    </dd>
+                  </div>
+                </dl>
+
+                <Link
+                  href={`/admin/listing-masuk/${listing.id}`}
+                  className="mt-3 inline-flex h-10 items-center justify-center gap-1 rounded-xl border border-line px-4 text-sm font-semibold text-ink transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
+                >
+                  Detail →
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop table */}
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-line bg-surface">

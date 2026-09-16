@@ -111,7 +111,63 @@ export default async function AdminProdukPage({
         </div>
       ) : (
         <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Mobile card list */}
+          <ul className="divide-y divide-line sm:hidden">
+            {products.map((product) => {
+              const photo = parseProductPhotos(product.photos)[0];
+              const stock = STOCK_BADGE[product.stockStatus];
+              return (
+                <li key={product.id} className="flex gap-3 p-4">
+                  <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line bg-surface">
+                    {photo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={photo}
+                        alt={product.name}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <Package className="size-5 text-primary-200" aria-hidden="true" />
+                    )}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-ink">
+                      {product.name}
+                    </p>
+                    <p className="mt-0.5 truncate text-xs text-muted">
+                      {product.brand} · {product.model} · {product.storage}
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-bold tabular-nums text-ink">
+                        {formatIDR(product.price)}
+                      </span>
+                      <Badge variant={stock.variant}>{stock.label}</Badge>
+                      <span className="text-xs text-muted">
+                        {formatDate(product.createdAt)}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        href={`/admin/produk/tambah?id=${product.id}`}
+                      >
+                        <Pencil className="size-4" aria-hidden="true" />
+                        Edit
+                      </Button>
+                      <ProductDeleteButton
+                        productId={product.id}
+                        productName={product.name}
+                      />
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* Desktop table */}
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-line bg-surface">

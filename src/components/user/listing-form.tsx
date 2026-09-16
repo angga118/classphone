@@ -317,7 +317,7 @@ export function ListingForm() {
                 key={item}
                 type="button"
                 onClick={() => toggleCompleteness(item)}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all ${
+                className={`inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium transition-all ${
                   active
                     ? "border-primary-600 bg-primary-50 text-primary-700"
                     : "border-line bg-white text-muted hover:border-primary-300 hover:text-ink"
@@ -408,7 +408,7 @@ export function ListingForm() {
                 <button
                   type="button"
                   onClick={() => removePhoto(i)}
-                  className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute right-1 top-1 flex size-7 items-center justify-center rounded-full bg-black/60 text-white transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                   aria-label={`Hapus foto ${i + 1}`}
                 >
                   <X className="size-3.5" />
@@ -427,7 +427,12 @@ export function ListingForm() {
 
       {/* Submit */}
       <div className="flex justify-end border-t border-line pt-6">
-        <Button type="submit" size="lg" disabled={loading || compressing}>
+        <Button
+          type="submit"
+          size="lg"
+          disabled={loading || compressing}
+          className="w-full sm:w-auto"
+        >
           {loading ? (
             <>
               <Loader2 className="size-4 animate-spin" />

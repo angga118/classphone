@@ -422,7 +422,7 @@ export function ProductForm({ product }: ProductFormProps) {
                 <button
                   type="button"
                   onClick={() => removePhoto(i)}
-                  className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute right-1 top-1 flex size-7 items-center justify-center rounded-full bg-black/60 text-white transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                   aria-label={`Hapus foto ${i + 1}`}
                 >
                   <X className="size-3.5" />
@@ -434,11 +434,16 @@ export function ProductForm({ product }: ProductFormProps) {
       </div>
 
       {/* Submit */}
-      <div className="flex items-center justify-end gap-3 border-t border-line pt-6">
-        <Button variant="outline" href="/admin/produk">
+      <div className="flex flex-col-reverse items-stretch justify-end gap-3 border-t border-line pt-6 sm:flex-row sm:items-center">
+        <Button variant="outline" href="/admin/produk" className="sm:w-auto">
           Batal
         </Button>
-        <Button type="submit" size="lg" disabled={loading || compressing}>
+        <Button
+          type="submit"
+          size="lg"
+          disabled={loading || compressing}
+          className="sm:w-auto"
+        >
           {loading ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />

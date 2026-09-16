@@ -58,7 +58,7 @@ export default async function DashboardPage() {
               Kelola listing dan riwayat transaksi kamu.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Button variant="primary" size="md" href="/jual-hp">
               <Smartphone className="size-4" aria-hidden="true" />
               Jual HP Kamu
@@ -163,7 +163,62 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="mt-5 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-              <div className="overflow-x-auto">
+              {/* Mobile card list */}
+              <ul className="divide-y divide-line sm:hidden">
+                {transactions.map((tx) => {
+                  const productName = tx.listing
+                    ? `${tx.listing.brand} ${tx.listing.model}`
+                    : tx.product?.name ?? "—";
+                  const txStatusLabel =
+                    tx.status === "COMPLETED"
+                      ? "Selesai"
+                      : tx.status === "CANCELLED"
+                        ? "Dibatalkan"
+                        : "Proses";
+                  const txStatusClasses =
+                    tx.status === "COMPLETED"
+                      ? "bg-success-soft text-success"
+                      : tx.status === "CANCELLED"
+                        ? "bg-danger-soft text-danger"
+                        : "bg-warning-soft text-amber-600";
+                  return (
+                    <li key={tx.id} className="p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-ink">
+                            {productName}
+                          </p>
+                          <p className="mt-0.5 text-xs text-muted">
+                            {formatDate(tx.createdAt)}
+                          </p>
+                        </div>
+                        <span
+                          className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                            tx.type === "SELL"
+                              ? "bg-primary-50 text-primary-700"
+                              : "bg-wa-soft text-wa-dark"
+                          }`}
+                        >
+                          {tx.type === "SELL" ? "Jual" : "Beli"}
+                        </span>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between gap-3">
+                        <span className="text-sm font-bold tabular-nums text-ink">
+                          {formatIDR(tx.finalPrice)}
+                        </span>
+                        <span
+                          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${txStatusClasses}`}
+                        >
+                          {txStatusLabel}
+                        </span>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* Desktop table */}
+              <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full text-left text-sm">
                   <thead>
                     <tr className="border-b border-line bg-surface">

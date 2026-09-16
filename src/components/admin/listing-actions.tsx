@@ -166,7 +166,7 @@ export function ListingActions({
           <p className="mt-1 text-sm text-muted">{converted.name}</p>
           <Button
             variant="primary"
-            size="sm"
+            size="md"
             href={`/admin/produk/tambah?id=${converted.id}`}
             className="mt-3"
           >
@@ -183,7 +183,7 @@ export function ListingActions({
           </p>
           <Button
             variant="outline"
-            size="sm"
+            size="md"
             href={`/admin/produk/tambah?id=${productId}`}
             className="mt-3"
           >
@@ -201,7 +201,7 @@ export function ListingActions({
           </p>
           <Button
             variant="primary"
-            size="sm"
+            size="md"
             className="mt-3"
             onClick={handleApprove}
             disabled={loading}
@@ -232,7 +232,7 @@ export function ListingActions({
             <Button
               type="submit"
               variant="danger"
-              size="sm"
+              size="md"
               disabled={loading}
             >
               <XCircle className="size-4" aria-hidden="true" />
@@ -283,7 +283,7 @@ export function ListingActions({
           </p>
           <Button
             variant="primary"
-            size="sm"
+            size="md"
             className="mt-3"
             onClick={handleComplete}
             disabled={loading}
@@ -303,7 +303,7 @@ export function ListingActions({
           </p>
           <Button
             variant="primary"
-            size="sm"
+            size="md"
             className="mt-3"
             onClick={handleConvert}
             disabled={loading}

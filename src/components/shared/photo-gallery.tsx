@@ -33,7 +33,7 @@ export function PhotoGallery({ photos, alt }: PhotoGalleryProps) {
       </div>
 
       {photos.length > 1 ? (
-        <div className="mt-3 flex gap-3">
+        <div className="scrollbar-none -mx-1 mt-3 flex gap-3 overflow-x-auto px-1 pb-1">
           {photos.map((photo, i) => (
             <button
               key={`${photo}-${i}`}
@@ -41,7 +41,7 @@ export function PhotoGallery({ photos, alt }: PhotoGalleryProps) {
               onClick={() => setActive(i)}
               aria-label={`Lihat foto ${i + 1}`}
               className={cn(
-                "relative aspect-square w-20 overflow-hidden rounded-xl border-2 transition-all",
+                "relative aspect-square w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-all",
                 i === active
                   ? "border-primary-600 shadow-sm"
                   : "border-transparent opacity-70 hover:opacity-100"

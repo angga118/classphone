@@ -27,7 +27,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <a
       href={`/produk/${product.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-md"
+      className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-md"
     >
       {/* Photo — 4:3 */}
       <div className="relative aspect-[4/3] overflow-hidden bg-surface">

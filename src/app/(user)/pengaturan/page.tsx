@@ -247,7 +247,12 @@ export default function PengaturanPage() {
             )}
 
             <div className="flex justify-end">
-              <Button type="submit" size="sm" disabled={profileSaving}>
+              <Button
+                type="submit"
+                size="md"
+                disabled={profileSaving}
+                className="w-full sm:w-auto"
+              >
                 {profileSaving ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
@@ -312,7 +317,12 @@ export default function PengaturanPage() {
             )}
 
             <div className="flex justify-end">
-              <Button type="submit" size="sm" disabled={pwSaving}>
+              <Button
+                type="submit"
+                size="md"
+                disabled={pwSaving}
+                className="w-full sm:w-auto"
+              >
                 {pwSaving ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (

@@ -89,6 +89,16 @@ export function NavbarClient({
     };
   }, [userMenuOpen]);
 
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
+
   const initials = getInitials(user?.name);
   const settingsHref =
     user?.role === "ADMIN" ? "/admin/pengaturan" : "/pengaturan";
@@ -236,7 +246,7 @@ export function NavbarClient({
           {/* Mobile toggle (<lg) */}
           <button
             type="button"
-            className="flex size-10 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:bg-surface lg:hidden"
+            className="flex size-11 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:bg-surface lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Tutup menu" : "Buka menu"}
             aria-expanded={open}
@@ -246,9 +256,9 @@ export function NavbarClient({
         </div>
       </div>
 
-      {/* Mobile menu (<lg) */}
+      {/* Mobile menu (<lg) — animated slide-down panel */}
       {open && (
-        <div className="border-t border-line bg-white px-4 pb-5 pt-3 lg:hidden">
+        <div className="animate-slide-down max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white px-4 pb-6 pt-3 lg:hidden">
           <nav className="flex flex-col gap-0.5">
             {/* Nav links */}
             <Link

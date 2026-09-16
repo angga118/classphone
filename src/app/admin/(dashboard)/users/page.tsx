@@ -54,7 +54,71 @@ export default async function AdminUsersPage() {
         </div>
       ) : (
         <div className="card overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Mobile card list */}
+          <ul className="divide-y divide-line sm:hidden">
+            {users.map((user) => (
+              <li key={user.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-ink">
+                      {user.name}
+                    </p>
+                    <p className="mt-0.5 truncate text-xs text-muted">
+                      {user.email}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
+                    <Badge
+                      variant={user.role === "ADMIN" ? "info" : "neutral"}
+                    >
+                      {user.role === "ADMIN" ? "Admin" : "User"}
+                    </Badge>
+                    {user.isBlocked ? (
+                      <Badge variant="danger">Diblokir</Badge>
+                    ) : (
+                      <Badge variant="success">Aktif</Badge>
+                    )}
+                  </div>
+                </div>
+
+                <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                  <div className="min-w-0">
+                    <dt className="text-muted">Phone</dt>
+                    <dd className="truncate font-medium text-ink">
+                      {user.phone ?? "—"}
+                    </dd>
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-muted">Listing</dt>
+                    <dd className="font-medium tabular-nums text-ink">
+                      {user._count.listings}
+                    </dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="text-muted">Bergabung</dt>
+                    <dd className="font-medium text-ink">
+                      {formatDate(user.createdAt)}
+                    </dd>
+                  </div>
+                </dl>
+
+                <div className="mt-3">
+                  {user.role !== "ADMIN" ? (
+                    <UserBlockButton
+                      userId={user.id}
+                      userName={user.name}
+                      isBlocked={user.isBlocked}
+                    />
+                  ) : (
+                    <span className="text-xs text-muted">—</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop table */}
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-line bg-surface">

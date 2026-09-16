@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -46,6 +46,16 @@ export function AdminSidebar({
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Lock body scroll while the mobile drawer is open
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [sidebarOpen]);
 
   function isActive(href: string) {
     if (href === "/admin") return pathname === "/admin";
@@ -126,23 +136,26 @@ export function AdminSidebar({
         {sidebarContent}
       </aside>
 
-      {/* Mobile overlay */}
+      {/* Mobile drawer */}
       {sidebarOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="animate-fade-in absolute inset-0 bg-black/40"
             onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
           />
-          <aside className="relative flex h-full w-72 flex-col bg-white shadow-xl">
+          <aside className="animate-slide-in-right relative flex h-full w-72 max-w-[85vw] flex-col bg-white shadow-xl">
             <button
               type="button"
               onClick={() => setSidebarOpen(false)}
-              className="absolute right-3 top-3.5 rounded-lg p-1.5 text-muted hover:bg-surface hover:text-ink"
+              className="absolute right-3 top-3.5 z-10 flex size-10 items-center justify-center rounded-lg text-muted hover:bg-surface hover:text-ink"
               aria-label="Tutup sidebar"
             >
               <X className="size-5" />
             </button>
-            {sidebarContent}
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+              {sidebarContent}
+            </div>
           </aside>
         </div>
       ) : null}
@@ -150,28 +163,29 @@ export function AdminSidebar({
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex h-14 items-center justify-between border-b border-line bg-white px-4 sm:px-6">
+        <header className="flex h-14 items-center justify-between gap-2 border-b border-line bg-white px-3 sm:px-6">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 text-muted hover:bg-surface hover:text-ink lg:hidden"
+            className="flex size-11 shrink-0 items-center justify-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink lg:hidden"
             aria-label="Buka sidebar"
           >
             <Menu className="size-5" />
           </button>
           <div className="hidden lg:block" />
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <NotificationBell
               initialUnread={initialUnread}
               initialNotifications={initialNotifications}
             />
-            <span className="text-sm font-medium text-ink">
+            <span className="hidden min-w-0 truncate text-sm font-medium text-ink sm:block">
               {adminName ?? "Admin"}
             </span>
             <button
               type="button"
               onClick={handleLogout}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:bg-danger-soft hover:text-danger"
+              className="flex size-10 shrink-0 items-center justify-center gap-1.5 rounded-xl px-2 text-sm font-medium text-muted transition-colors hover:bg-danger-soft hover:text-danger"
+              aria-label="Logout"
             >
               <LogOut className="size-4" aria-hidden="true" />
               <span className="hidden sm:inline">Logout</span>

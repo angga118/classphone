@@ -255,7 +255,12 @@ export default function AdminPengaturanPage() {
 
         {/* Submit */}
         <div className="flex justify-end border-t border-line pt-6">
-          <Button type="submit" size="lg" disabled={saving}>
+          <Button
+            type="submit"
+            size="lg"
+            disabled={saving}
+            className="w-full sm:w-auto"
+          >
             {saving ? (
               <>
                 <Loader2 className="size-4 animate-spin" aria-hidden="true" />

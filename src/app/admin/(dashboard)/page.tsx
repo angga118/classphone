@@ -121,7 +121,39 @@ export default async function AdminDashboardPage() {
           </div>
         ) : (
           <div className="card mt-4 overflow-hidden">
-            <div className="overflow-x-auto">
+            {/* Mobile card list */}
+            <ul className="divide-y divide-line sm:hidden">
+              {recentListings.map((listing) => (
+                <li
+                  key={listing.id}
+                  className="flex items-center justify-between gap-3 p-4"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-ink">
+                      {listing.brand} {listing.model}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted">
+                      {listing.storage} · {listing.user.name}
+                    </p>
+                    <p className="mt-1 text-xs text-muted">
+                      {formatDate(listing.createdAt)}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <StatusBadge status={listing.status} />
+                    <Link
+                      href={`/admin/listing-masuk/${listing.id}`}
+                      className="text-xs font-semibold text-primary-600 transition-colors hover:text-primary-800"
+                    >
+                      Detail →
+                    </Link>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Desktop table */}
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-line bg-surface">
