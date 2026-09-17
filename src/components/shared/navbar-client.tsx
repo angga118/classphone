@@ -125,6 +125,15 @@ export function NavbarClient({
           <Button
             variant="ghost"
             size="sm"
+            href="/"
+            className={cn(isActive(pathname, "/") && activeLinkClasses)}
+          >
+            Beranda
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
             href="/katalog"
             className={cn(isActive(pathname, "/katalog") && activeLinkClasses)}
           >
@@ -261,6 +270,17 @@ export function NavbarClient({
         <div className="animate-slide-down max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white px-4 pb-6 pt-3 lg:hidden">
           <nav className="flex flex-col gap-0.5">
             {/* Nav links */}
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className={cn(
+                "rounded-xl px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-surface",
+                isActive(pathname, "/") && "bg-primary-50 text-primary-700"
+              )}
+            >
+              Beranda
+            </Link>
+
             <Link
               href="/katalog"
               onClick={() => setOpen(false)}
